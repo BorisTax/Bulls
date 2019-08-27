@@ -9,12 +9,13 @@ import {
 import {connect} from 'react-redux'
 import {start, nextMove, filterNumbers} from './actions'
 import {isLegal, bullsCows} from './utils'
+import { SpinnerGroup } from './SpinnerGroup';
 
 
 class GameView extends React.Component{
   constructor(props){
     super(props)
-    this.state={playerNumber:"",comp:{moved:false},correct:true,...props}
+    this.state={playerNumber:"",correct:true,...props}
   }
   check=()=>{
     if (isLegal(this.state.playerNumber)===false) {this.setState({correct:false});
@@ -23,6 +24,7 @@ class GameView extends React.Component{
     const {bulls,cows}=bullsCows(this.state.playerNumber,this.props.compNumber)
     this.state.playerMoves.push(`${this.state.playerNumber} - ${bulls} быков, ${cows} коров`)
     this.props.nextMove()
+    this.setState({bulls,cows})
   }
   compMove=()=>{
     const n=this.props.numbers.length
@@ -32,7 +34,7 @@ class GameView extends React.Component{
   }
   answer=()=>{
     this.props.filterNumbers(this.state.comp.number,this.state.bulls,this.state.cows)
-    this.props.compMoves.push(`${this.state.comp.number} - ${this.state.bulls} быков, ${this.state.cows} коров`)
+    this.props.compMoves.push(`${this.state.compNumber} - ${this.state.bulls} быков, ${this.state.cows} коров`)
     this.props.nextMove()
   }
   render(){
@@ -41,14 +43,17 @@ class GameView extends React.Component{
   switch(this.props.gameStep){
     case 0:
       move=<View>
-      <Text>Ваш ход</Text>
-      <TextInput style={{height: 40}} placeholder="Введите число"  onChangeText={(text) => this.setState({playerNumber:text})} value={this.state.playerNumber}/>
-      <Button title="Проверить" onPress={this.check.bind(this)}/> 
-      {correct} 
+      <Text style={{fontSize:30}}>Ваш ход</Text>
+      <View>
+      <SpinnerGroup count={4} onChange={(value)=>{this.setState({playerNumber:value})}}/>
+      </View>
+      {//<Button title="Проверить" onPress={this.check.bind(this)}/> 
+      //{correct}
+    } 
       </View>
       break;
     case 1:
-        move=<View>
+      move=<View>
         <Text>Ваш ход</Text>
         <Text>{this.state.playerNumber}</Text>
         <Text>{`${this.state.bulls} быков, ${this.state.cows} коров`}</Text>
@@ -56,7 +61,7 @@ class GameView extends React.Component{
         </View>
         break;
     case 2:
-        move=<View>
+      move=<View>
         <Text>Мой ход</Text>
         <Text>{`Вы загадали число ${this.state.comp.number}?`}</Text>
         <TextInput style={{height: 40,width:40}} onChangeText={(text) => this.setState({bulls:text})}/><Text>быков</Text>
@@ -70,10 +75,9 @@ class GameView extends React.Component{
         break;
     default:
   }
-  return <View>
+  return <View style={{flex:1,flexDirection:"column"}}>
           {move}
-          <Text>{`Шаг `+this.props.gameStep}</Text>
-          <View style={styles.movesTable}>
+           <View style={styles.movesTable}>
             <View style={styles.moves}>
               {this.state.playerMoves.map((item,index)=><Text key={index}>{item}</Text>)}
             </View>
@@ -107,11 +111,9 @@ const styles = StyleSheet.create({
     maincontainer:{flex: 1},
     title:{fontSize:30},
     movesTable:{
-      flex:1,
       flexDirection:"row",
     },
     moves:{
-      flex:1,
       flexDirection:"column",
       justifyContent:"flex-start",
       alignItems:"flex-start",

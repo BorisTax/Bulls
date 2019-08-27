@@ -20,7 +20,7 @@ export const mainReducer=(state=initialState,action)=>{
             const newNumbers=state.numbers.filter(item=>{
                 if(item===number)return false
                 const bc=bullsCows(item,number)
-                if(bc.bulls===bulls&bc.cows===cows) return true
+                if(bc.bulls==bulls&bc.cows==cows) return true
                 return false
             })
             return {...state,numbers:newNumbers}

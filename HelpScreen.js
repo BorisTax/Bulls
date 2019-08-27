@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems:'center'},
     maincontainer:{flex: 1},
-    title:{fontSize:30}
+    title:{fontSize:30,borderWidth:1}
 });
 
 export default GameScreen;
