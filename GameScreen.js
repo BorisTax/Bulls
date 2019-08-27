@@ -14,20 +14,21 @@ import {isLegal, bullsCows} from './utils'
 class GameView extends React.Component{
   constructor(props){
     super(props)
-    this.state={text:"",comp:{moved:false},correct:true,...props}
+    this.state={playerNumber:"",comp:{moved:false},correct:true,...props}
   }
   check=()=>{
-    if (isLegal(this.state.text)===false) {this.setState({correct:false});
+    if (isLegal(this.state.playerNumber)===false) {this.setState({correct:false});
                     return
                   }
-    const {bulls,cows}=bullsCows(this.state.text,this.props.compNumber)
-    this.state.playerMoves.push(`${this.state.text} - ${bulls} быков, ${cows} коров`)
+    const {bulls,cows}=bullsCows(this.state.playerNumber,this.props.compNumber)
+    this.state.playerMoves.push(`${this.state.playerNumber} - ${bulls} быков, ${cows} коров`)
     this.props.nextMove()
   }
   compMove=()=>{
     const n=this.props.numbers.length
     const k=Math.round(Math.random()*n)
     this.setState({comp:{numberIndex:k,number:this.props.numbers[k],moved:true}})
+    this.props.nextMove()
   }
   answer=()=>{
     this.props.filterNumbers(this.state.comp.number,this.state.bulls,this.state.cows)
@@ -36,28 +37,42 @@ class GameView extends React.Component{
   }
   render(){
   const correct=!this.state.correct?<Text style={styles.incorrect}>Неправильный ввод</Text>:<></>
-  const move=this.props.playerTurn===true?<View>
-                              <Text>Ваш ход</Text>
-                              <TextInput
-                                style={{height: 40}}
-                                placeholder="Введите число"
-                                onChangeText={(text) => this.setState({text:text})}
-                                value={this.state.text}
-                                  />
-                              <Button title="Проверить" onPress={this.check.bind(this)}/> 
-                              {correct} 
-                              </View>
-                              :<View>
-                                 {this.state.comp.moved===false?<Button title="Ход компьютера" onPress={this.compMove.bind(this)}/>:
-                                    <View>
-                                      <Text>{`Вы загадали число ${this.state.comp.number}?`}</Text>
-                                      <TextInput style={{height: 40,width:40}} onChangeText={(text) => this.setState({bulls:text})}/><Text>быков</Text>
-                                      <TextInput style={{height: 40,width:40}} onChangeText={(text) => this.setState({cows:text})}/><Text>коров</Text>
-                                      <Button title="Ответ" onPress={()=>{this.answer()}}/>
-                                    </View>}
-                              </View>
+  let move;
+  switch(this.props.gameStep){
+    case 0:
+      move=<View>
+      <Text>Ваш ход</Text>
+      <TextInput style={{height: 40}} placeholder="Введите число"  onChangeText={(text) => this.setState({playerNumber:text})} value={this.state.playerNumber}/>
+      <Button title="Проверить" onPress={this.check.bind(this)}/> 
+      {correct} 
+      </View>
+      break;
+    case 1:
+        move=<View>
+        <Text>Ваш ход</Text>
+        <Text>{this.state.playerNumber}</Text>
+        <Text>{`${this.state.bulls} быков, ${this.state.cows} коров`}</Text>
+        <Button title="Далее" onPress={this.compMove.bind(this)}/> 
+        </View>
+        break;
+    case 2:
+        move=<View>
+        <Text>Мой ход</Text>
+        <Text>{`Вы загадали число ${this.state.comp.number}?`}</Text>
+        <TextInput style={{height: 40,width:40}} onChangeText={(text) => this.setState({bulls:text})}/><Text>быков</Text>
+        <TextInput style={{height: 40,width:40}} onChangeText={(text) => this.setState({cows:text})}/><Text>коров</Text>
+        <Button title="Ответ" onPress={this.answer.bind(this)}/> 
+        </View>
+        break;
+    case 3:
+        break;
+    case 4:
+        break;
+    default:
+  }
   return <View>
           {move}
+          <Text>{`Шаг `+this.props.gameStep}</Text>
           <View style={styles.movesTable}>
             <View style={styles.moves}>
               {this.state.playerMoves.map((item,index)=><Text key={index}>{item}</Text>)}
