@@ -7,8 +7,8 @@ import {
   Text
 } from 'react-native';
 import {connect} from 'react-redux'
-import {start, nextMove, filterNumbers} from './actions'
-import {isLegal, bullsCows} from './utils'
+import {start, nextMove, filterNumbers} from '../actions'
+import {isLegal, bullsCows} from '../utils'
 import { SpinnerGroup } from './SpinnerGroup';
 
 
@@ -22,7 +22,7 @@ class GameView extends React.Component{
                     return
                   }
     const {bulls,cows}=bullsCows(this.state.playerNumber,this.props.compNumber)
-    this.state.playerMoves.push(`${this.state.playerNumber} - ${bulls} быков, ${cows} коров`)
+    this.state.playerMoves.push(`${this.state.playerNumber} - быков: ${bulls}, коров: ${cows}`)
     this.props.nextMove()
     this.setState({bulls,cows})
   }
@@ -34,7 +34,7 @@ class GameView extends React.Component{
   }
   answer=()=>{
     this.props.filterNumbers(this.state.comp.number,this.state.bulls,this.state.cows)
-    this.props.compMoves.push(`${this.state.compNumber} - ${this.state.bulls} быков, ${this.state.cows} коров`)
+    this.props.compMoves.push(`${this.state.compNumber} - быков: ${this.state.bulls}, коров: ${this.state.cows}`)
     this.props.nextMove()
   }
   render(){
@@ -42,30 +42,26 @@ class GameView extends React.Component{
   let move;
   switch(this.props.gameStep){
     case 0:
-      move=<View>
-      <Text style={{fontSize:30}}>Ваш ход</Text>
-      <View>
-      <SpinnerGroup count={4} onChange={(value)=>{this.setState({playerNumber:value})}}/>
-      </View>
-      {//<Button title="Проверить" onPress={this.check.bind(this)}/> 
-      //{correct}
-    } 
-      </View>
+      move=<View style={styles.container}>
+      <Text style={styles.yourStep}>Ваш ход</Text>
+        <SpinnerGroup count={4} max={9} onChange={(value)=>{this.setState({playerNumber:value})}}/>
+        <Button title="Проверить" onPress={this.check.bind(this)}/> 
+        {correct}
+        </View>
       break;
     case 1:
-      move=<View>
-        <Text>Ваш ход</Text>
-        <Text>{this.state.playerNumber}</Text>
-        <Text>{`${this.state.bulls} быков, ${this.state.cows} коров`}</Text>
+      move=<View style={styles.container}>
+        <Text style={styles.yourStep}>Ваш ход</Text>
+        <Text style={styles.text}>{this.state.playerNumber}</Text>
+        <Text style={styles.text}>{`быков: ${this.state.bulls} , коров: ${this.state.cows}`}</Text>
         <Button title="Далее" onPress={this.compMove.bind(this)}/> 
         </View>
         break;
     case 2:
-      move=<View>
-        <Text>Мой ход</Text>
-        <Text>{`Вы загадали число ${this.state.comp.number}?`}</Text>
-        <TextInput style={{height: 40,width:40}} onChangeText={(text) => this.setState({bulls:text})}/><Text>быков</Text>
-        <TextInput style={{height: 40,width:40}} onChangeText={(text) => this.setState({cows:text})}/><Text>коров</Text>
+      move=<View style={styles.container}>
+        <Text style={styles.yourStep}>Мой ход</Text>
+        <Text style={styles.text}>{`Вы загадали число ${this.state.comp.number}?`}</Text>
+        <SpinnerGroup count={2} max={4} onChange={(value)=>{this.setState({bulls:+value[0],cows:+value[1]})}}/>
         <Button title="Ответ" onPress={this.answer.bind(this)}/> 
         </View>
         break;
@@ -79,9 +75,11 @@ class GameView extends React.Component{
           {move}
            <View style={styles.movesTable}>
             <View style={styles.moves}>
+              <Text style={{alignSelf:"center"}}>Ваши ходы</Text>
               {this.state.playerMoves.map((item,index)=><Text key={index}>{item}</Text>)}
             </View>
             <View style={styles.moves}>
+            <Text style={{alignSelf:"center"}}>Мои ходы</Text>
             {this.state.compMoves.map((item,index)=><Text key={index}>{item}</Text>)}
             </View>
           </View>
@@ -92,7 +90,7 @@ class GameView extends React.Component{
 const GameScreen = (props) => {
   const start=props.continueGame===false?
           <View>
-          <Text>Загадайте четырехзначное число с неповторяющимися цифрами. (0123 тоже подходит)</Text>
+          <Text style={styles.text}>Загадайте четырехзначное число с неповторяющимися цифрами. (Варианты типа 0123 тоже подходят)</Text>
           <Button title="Загадал" onPress={()=>{props.start()}}/>
           </View>:<View><GameView {...props}/></View>
   return (
@@ -103,15 +101,19 @@ const GameScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
+  yourStep:{fontSize:20},
+  text:{fontSize:15},
     image:{width:100,height:100,resizeMode:"contain"},
-    container:{height:300,flex: 1,
+    container:{
       flexDirection: 'column',
       justifyContent: 'flex-start',
       alignItems:'center'},
     maincontainer:{flex: 1},
     title:{fontSize:30},
     movesTable:{
+      borderWidth:1,
       flexDirection:"row",
+      justifyContent:"space-between"
     },
     moves:{
       flexDirection:"column",

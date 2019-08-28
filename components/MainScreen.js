@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from  'react-redux'
-import {reset} from './actions'
+import {reset} from '../actions'
 import {
   Button,
   StyleSheet,
@@ -12,8 +12,9 @@ import {
 const MainScreen = (props) => {
   return (
             <View style={styles.container}>
-                <Text style={styles.title}>Быки и Коровы</Text>
-                <Image source={require('./images/bull.jpg')} style={styles.image}/>
+                {//<Text style={styles.title}>Быки и Коровы</Text>
+                }
+                <Image source={require('../images/bull.jpg')} style={styles.image}/>
                 <Button title="Новая игра" onPress={()=>{props.reset();props.navigation.navigate("Game")}}/>
                 {props.continueGame?<Button title="Продолжить игру" onPress={()=>{props.navigation.navigate("Game")}}/>:<></>}
                 <Button title="Справка" onPress={()=>{props.navigation.navigate("Help")}}/>

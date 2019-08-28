@@ -14,7 +14,7 @@ export class SpinnerGroup extends React.Component{
         this.setState({number:newNumber})
         }
     render(){
-    const spinners=this.state.number.split("").map((item,index)=><Spinner key={index} index={index} value={+item} onChange={this.onChange.bind(this)} max={9}/>)
+    const spinners=this.state.number.split("").map((item,index)=><Spinner key={index} index={index} value={+item} onChange={this.onChange.bind(this)} max={this.props.max}/>)
     return (
                 <View style={{flexDirection:"row"}}>
                     {spinners}
