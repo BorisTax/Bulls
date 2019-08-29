@@ -12,8 +12,7 @@ import {
 const MainScreen = (props) => {
   return (
             <View style={styles.container}>
-                {//<Text style={styles.title}>Быки и Коровы</Text>
-                }
+                <Text style={styles.title}>Быки и Коровы</Text>
                 <Image source={require('../images/bull.jpg')} style={styles.image}/>
                 <Button title="Новая игра" onPress={()=>{props.reset();props.navigation.navigate("Game")}}/>
                 {props.continueGame?<Button title="Продолжить игру" onPress={()=>{props.navigation.navigate("Game")}}/>:<></>}
@@ -27,7 +26,7 @@ const styles = StyleSheet.create({
     container:{height:300,flex: 1,
       flexDirection: 'column',
       justifyContent: 'flex-start',
-      alignItems:'center'},
+      alignItems:'center',width:"100%"},
     maincontainer:{flex: 1},
     title:{fontSize:30}
 });

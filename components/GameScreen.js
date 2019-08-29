@@ -4,25 +4,27 @@ import {
   StyleSheet,
   TextInput,
   View,
-  Text
+  Text,
+  Dimensions
 } from 'react-native';
 import {connect} from 'react-redux'
-import {start, nextMove, filterNumbers, setPlayerPrevNumber, setCompWins, setPlayerWins} from '../actions'
+import {start, nextMove, filterNumbers, setPlayerPrevNumber,setcompGuessNumber, setCompWins, setPlayerWins} from '../actions'
 import {isLegal, bullsCows} from '../utils'
 import { SpinnerGroup } from './SpinnerGroup';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 class GameView extends React.Component{
   constructor(props){
     super(props)
-    this.state={playerNumber:props.playerPrevNumber,correct:true,...props}
+    this.state={playerNumber:props.playerPrevNumber,bulls:0,cows:0,correct:true,...props}
   }
   check=()=>{
     if (isLegal(this.state.playerNumber)===false) {this.setState({correct:false});
                     return
                   }
     const {bulls,cows}=bullsCows(this.state.playerNumber,this.props.compNumber)
-    this.state.playerMoves.push(`${this.state.playerNumber} - быков: ${bulls}, коров: ${cows}`)
+    this.state.playerMoves.push(`${this.state.playerNumber} - Б-${bulls}, К-${cows}`)
     this.props.nextMove()
     this.props.setPlayerPrevNumber(this.state.playerNumber)
     this.setState({bulls,cows})
@@ -31,22 +33,25 @@ class GameView extends React.Component{
   compMove=()=>{
     const n=this.props.numbers.length
     const k=Math.trunc(Math.random()*n)
-    this.setState({compNumber:this.props.numbers[k]})
+    //this.setState({compNumber:this.props.numbers[k]})
+    this.props.setcompGuessNumber(this.props.numbers[k])
     this.props.nextMove()
   }
   answer=()=>{
-    this.props.filterNumbers(this.state.compNumber,this.state.bulls,this.state.cows)
-    this.props.compMoves.push(`${this.state.compNumber} - быков: ${this.state.bulls}, коров: ${this.state.cows}`)
+    this.props.filterNumbers(this.props.compGuessNumber,this.state.bulls,this.state.cows)
+    this.props.compMoves.push(`${this.props.compGuessNumber} - Б-${this.state.bulls}, К-${this.state.cows}`)
     this.props.nextMove()
     if(this.state.bulls==4) this.props.setCompWins()
   }
   render(){
+    const width=Dimensions.get('window').width
+    const height=Dimensions.get('window').height
   const correct=!isLegal(this.state.playerNumber)?<Text style={styles.incorrect}>Неправильный ввод</Text>:<></>
   let move;
   switch(this.props.gameStep){
     case 0:
       move=<View style={styles.container}>
-      <Text style={styles.yourStep}>Ваш ход</Text>
+      <Text style={styles.textMiddle}>Ваш ход</Text>
         <SpinnerGroup count={4} max={9} init={this.props.playerPrevNumber} onChange={(value)=>{this.setState({playerNumber:value})}}/>
         <Button title="Проверить" onPress={this.check.bind(this)}/> 
         {correct}
@@ -54,17 +59,17 @@ class GameView extends React.Component{
       break;
     case 1:
       move=<View style={styles.container}>
-        <Text style={styles.yourStep}>Ваш ход</Text>
-        <Text style={styles.text}>{this.state.playerNumber}</Text>
-        <Text style={styles.text}>{`быков: ${this.state.bulls} , коров: ${this.state.cows}`}</Text>
+        <Text style={styles.textMiddle}>Ваш ход</Text>
+        <Text style={styles.textMiddle}>{this.state.playerNumber}</Text>
+        <Text style={styles.textMiddle}>{`быков: ${this.state.bulls}, коров: ${this.state.cows}`}</Text>
         <Button title="Далее" onPress={this.compMove.bind(this)}/> 
         </View>
         break;
     case 2:
       move=<View style={styles.container}>
-        <Text style={styles.yourStep}>Мой ход</Text>
-        <Text style={styles.text}>{`Вы загадали число ${this.state.compNumber}?`}</Text>
-        <View style={{flexDirection:"row"}}>
+        <Text style={styles.textMiddle}>Мой ход</Text>
+        <Text style={styles.textMiddle}>{`Вы загадали число ${this.props.compGuessNumber}?`}</Text>
+        <View style={{flexDirection:"row",alignItems:"center"}}>
           <Text>Быков</Text>
           <SpinnerGroup count={2} max={4} init={"00"} onChange={(value)=>{this.setState({bulls:+value[0],cows:+value[1]})}}/>
           <Text>Коров</Text>
@@ -79,24 +84,28 @@ class GameView extends React.Component{
     default:
   }
   if(this.props.numbers.length===0) move=<View style={{justifyContent:"center",alignItems:"center"}}>
-                   <Text style={styles.firstText}>Я так не играю. Вы где-то ошиблись :(</Text>
+                   <Text style={styles.textLarge}>Я так не играю. Вы где-то ошиблись :(</Text>
                 </View>
   if(this.props.compWins) move=<View style={{justifyContent:"center",alignItems:"center"}}>
-  <Text style={styles.firstText}>УРРРРАААА!. Я победил :)</Text>
+  <Text style={styles.textLarge}>УРРРРАААА!. Я победил :)</Text>
 </View>
 if(this.props.playerWins) move=<View style={{justifyContent:"center",alignItems:"center"}}>
-<Text style={styles.firstText}>Вы угадали! :)</Text>
+<Text style={styles.textLarge}>Вы угадали! :)</Text>
 </View>
-  return <View style={{flex:1,flexDirection:"column"}}>
+  return <View style={{flex:1,width:width,flexDirection:"column",borderWidth:1}}>
           {move}
            <View style={styles.movesTable}>
-            <View style={styles.moves}>
-              <Text style={{alignSelf:"center"}}>Ваши ходы</Text>
-              {this.state.playerMoves.map((item,index)=><Text key={index}>{item}</Text>)}
+            <View style={{...styles.moves,width:width/2}}>
+              <Text style={{...styles.textMiddle,alignSelf:"center"}}>Ваши ходы</Text>
+             <ScrollView>
+              {this.state.playerMoves.map((item,index)=><Text style={styles.textSmall} key={index}>{item}</Text>)}
+              </ScrollView>         
             </View>
-            <View style={styles.moves}>
-            <Text style={{alignSelf:"center"}}>Мои ходы</Text>
-            {this.state.compMoves.map((item,index)=><Text key={index}>{item}</Text>)}
+            <View style={{...styles.moves,width:width/2}}>
+            <Text style={{...styles.textMiddle,alignSelf:"center"}}>Мои ходы</Text>
+            <ScrollView>
+            {this.state.compMoves.map((item,index)=><Text style={styles.textSmall} key={index}>{item}</Text>)}
+            </ScrollView>
             </View>
           </View>
   </View>
@@ -118,26 +127,28 @@ const GameScreen = (props) => {
 
 const styles = StyleSheet.create({
   yourStep:{fontSize:20},
-  text:{fontSize:15},
-  firstText:{fontSize:30},
+  texSmall:{fontSize:15},
+  textMiddle:{fontSize:20},
+  textLarge:{fontSize:25},
     image:{width:100,height:100,resizeMode:"contain"},
     container:{
       flexDirection: 'column',
       justifyContent: 'flex-start',
-      alignItems:'center'},
+      alignItems:'center',
+    width:"100%"},
     maincontainer:{flex: 1},
     title:{fontSize:30},
     movesTable:{
       borderWidth:1,
       flexDirection:"row",
-      justifyContent:"space-between"
+      justifyContent:"space-around",
     },
     moves:{
       flexDirection:"column",
-      justifyContent:"flex-start",
-      alignItems:"flex-start",
+      justifyContent:"center",
+      alignItems:"center",
       borderColor:"blue",
-      borderWidth:1,
+      borderWidth:1
     },
     incorrect:{
       color:"red"
@@ -156,6 +167,7 @@ const mapDispatchtoProps=(dispatch)=>{
     nextMove:()=>dispatch(nextMove()),
     filterNumbers:(number,bulls,cows)=>dispatch(filterNumbers(number,bulls,cows)),
     setPlayerPrevNumber:(n)=>dispatch(setPlayerPrevNumber(n)),
+    setcompGuessNumber:(n)=>dispatch(setcompGuessNumber(n)),
     setCompWins:()=>dispatch(setCompWins()),
     setPlayerWins:()=>dispatch(setPlayerWins())
   }
