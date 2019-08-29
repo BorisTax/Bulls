@@ -2,7 +2,13 @@ export const RESET="RESET"
 export const START="START"
 export const NEXT_MOVE="NEXT_MOVE"
 export const FILTER_NUMBERS="FILTER_NUMBERS"
+export const SET_PLAYER_PREV_NUMBER="SET_PLAYER_PREV_NUMBER"
+export const PLAYER_WINS="PLAYER_WINS"
+export const COMP_WINS="COMP_WINS"
 export const reset=()=>({type:RESET})
 export const start=()=>({type:START})
 export const nextMove=()=>({type:NEXT_MOVE})
+export const setCompWins=()=>({type:COMP_WINS})
+export const setPlayerWins=()=>({type:PLAYER_WINS})
 export const filterNumbers=(number,bulls,cows)=>({type:FILTER_NUMBERS,data:{number,bulls,cows}})
+export const setPlayerPrevNumber=(n)=>({type:SET_PLAYER_PREV_NUMBER,data:n})

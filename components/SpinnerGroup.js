@@ -4,7 +4,7 @@ import {Spinner} from './Spinner'
 export class SpinnerGroup extends React.Component{
     constructor(props){
         super(props)
-        this.state={number:"0".repeat(props.count)}
+        this.state={number:props.init}
     }
     onChange=(i,value)=>{
         let newNumber=this.state.number.split("")
