@@ -15,11 +15,11 @@ import {
   Text,
   Image
 } from 'react-native';
-import {styles} from './styles'
+import {styles,appTheme} from './styles'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
-const GameScreen = () => {
+const HelpScreen = () => {
   const [rules,showRules]=useState(false)
   return (
             <View style={styles.helpScreenContainer}>
@@ -33,11 +33,17 @@ const GameScreen = () => {
                           Ответ в виде 4 быка означает, что число угадано.
                           Побеждает тот, кто первым угадет число соперника.</Text>:<></>}
                 <TouchableOpacity onPress={()=>{showRules(!rules)}}>
-                {rules?<Text style={styles.textMiddle}>Скрыть правила</Text>:<Text style={styles.textMiddle}>Показать правила</Text>}
+                {rules?<Text style={{...styles.textMiddle,color:"blue"}}>Скрыть правила игры</Text>:<Text style={{...styles.textMiddle,color:"blue"}}>Показать правила игры</Text>}
                 </TouchableOpacity>  
             </View>
   );
 };
+HelpScreen.navigationOptions = {
+  title:"В главное меню",
+  headerStyle: {
+    backgroundColor: appTheme.headerColor,
+    
+  },
+};
 
-
-export default GameScreen;
+export default HelpScreen;

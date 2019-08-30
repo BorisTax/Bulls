@@ -1,12 +1,18 @@
 import {StyleSheet} from 'react-native'
+export const appTheme={
+  headerColor:"#00FFFF",
+  bodyColor:"#BBEEEE"
+}
 export const styles = StyleSheet.create({
     image:{width:100,height:100,resizeMode:"contain"},
     mainScreenContainer:{height:300,flex: 1,
+      backgroundColor:appTheme.bodyColor,
       flexDirection: 'column',
       justifyContent: 'flex-start',
       alignItems:'center',width:"100%"},
       helpScreenImage:{width:100,height:100,resizeMode:"contain"},
       helpScreenContainer:{height:300,flex: 1,
+        backgroundColor:appTheme.bodyColor,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems:'center'},
@@ -17,11 +23,17 @@ export const styles = StyleSheet.create({
     textMiddle:{fontSize:20},
     textLarge:{fontSize:25},
       image:{width:100,height:100,resizeMode:"contain"},
-      container:{
+      gameScreenContainer:{
+        backgroundColor:appTheme.bodyColor,
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems:'center',
       width:"100%"},
+      moveContainer:{
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems:'center',
+      },
       maincontainer:{flex: 1},
       title:{fontSize:30},
       movesTable:{
@@ -44,7 +56,25 @@ export const styles = StyleSheet.create({
         resizeMode:"contain",
     },
     buttons:{
-      borderRadius:5
+      justifyContent:"center",
+      alignItems:"center",
+      borderRadius:15,
+      backgroundColor:"#00FFFF",
+      borderColor:"blue",
+      borderWidth:3,
+      padding:5,
+      
+    },
+    newGameButton:{
+      backgroundColor:"#55FF55",
+      color:"red"
+    },
+    continueGameButton:{
+      backgroundColor:"yellow",
+      color:"blue"
+    },
+    helpButton:{
+      backgroundColor:"#0088FF",
+      color:"white"
     }
-  
   });

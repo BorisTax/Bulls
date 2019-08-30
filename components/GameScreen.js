@@ -12,7 +12,8 @@ import {start, nextMove, filterNumbers, setPlayerPrevNumber,setcompGuessNumber, 
 import {isLegal, bullsCows} from '../utils'
 import { SpinnerGroup } from './SpinnerGroup';
 import { ScrollView } from 'react-native-gesture-handler';
-import {styles} from './styles'
+import {styles,appTheme} from './styles'
+import MyButton from './MyButton';
 
 class GameView extends React.Component{
   constructor(props){
@@ -50,25 +51,25 @@ class GameView extends React.Component{
   let move;
   switch(this.props.gameStep){
     case 0:
-      move=<View style={styles.container}>
+      move=<View style={styles.moveContainer}>
       <Text style={styles.textMiddle}>Ваш ход</Text>
         <SpinnerGroup count={4} max={9} init={this.props.playerPrevNumber} onChange={(value)=>{this.setState({playerNumber:value})}}/>
         <Text></Text>
-        <Button title="Проверить" onPress={this.check.bind(this)}/> 
+        <MyButton title="Проверить" onPress={this.check.bind(this)}/> 
         {correct}
         <Text></Text>
         </View>
       break;
     case 1:
-      move=<View style={styles.container}>
+      move=<View style={styles.moveContainer}>
         <Text style={styles.textMiddle}>Ваш ход</Text>
         <Text style={styles.textMiddle}>{this.state.playerNumber}</Text>
         <Text style={styles.textMiddle}>{`быков: ${this.state.bulls}, коров: ${this.state.cows}`}</Text>
-        <Button title="Далее" onPress={this.compMove.bind(this)}/> 
+        <MyButton title="Далее" onPress={this.compMove.bind(this)}/> 
         </View>
         break;
     case 2:
-      move=<View style={styles.container}>
+      move=<View style={styles.moveContainer}>
         <Text style={styles.textMiddle}>Мой ход</Text>
         <Text style={styles.textMiddle}>{`Вы загадали число ${this.props.compGuessNumber}?`}</Text>
         <View style={{flexDirection:"row",alignItems:"center"}}>
@@ -76,7 +77,7 @@ class GameView extends React.Component{
           <SpinnerGroup count={2} max={4} init={"00"} onChange={(value)=>{this.setState({bulls:+value[0],cows:+value[1]})}}/>
           <Text>Коров</Text>
         </View>
-        <Button title="Ответ" onPress={this.answer.bind(this)}/> 
+        <MyButton title="Ответ" onPress={this.answer.bind(this)}/> 
         </View>
         break;
     case 3:
@@ -119,15 +120,21 @@ const GameScreen = (props) => {
   const start=props.continueGame===false?
           <View>
           <Text style={styles.text}>Загадайте четырехзначное число с неповторяющимися цифрами. (Варианты типа 0123 тоже подходят)</Text>
-          <Button title="Загадал" onPress={()=>{props.start()}}/>
+          <MyButton title="Загадал" onPress={()=>{props.start()}}/>
           </View>:<View><GameView {...props}/></View>
   return (
-            <View style={styles.container}>
+            <View style={styles.gameScreenContainer}>
                 {start}
             </View>
   );
 };
-
+GameScreen.navigationOptions = {
+  title:"В главное меню",
+  headerStyle: {
+    backgroundColor: appTheme.headerColor,
+    
+  },
+};
 
 
 const mapStatetoProps=(store)=>{

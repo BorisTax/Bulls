@@ -6,7 +6,7 @@ compNumber:"",playerTurn:true,gameStep:0,playerPrevNumber:"0123",compGuessNumber
 export const mainReducer=(state=initialState,action)=>{
     switch(action.type){
         case RESET:
-            return {...initialState,numbers:resetNumbersSet()}
+            return {...initialState,playerMoves:[],compMoves:[],numbers:resetNumbersSet()}
         case START:
             do{
                 var n=""+Math.trunc(Math.random()*10000)
