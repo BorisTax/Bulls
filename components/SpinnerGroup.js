@@ -1,6 +1,7 @@
 import React from 'react'
 import {View,Button,Text} from 'react-native'
 import {Spinner} from './Spinner'
+import {styles} from './styles'
 export class SpinnerGroup extends React.Component{
     constructor(props){
         super(props)

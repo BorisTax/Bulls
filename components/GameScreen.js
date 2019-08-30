@@ -12,7 +12,7 @@ import {start, nextMove, filterNumbers, setPlayerPrevNumber,setcompGuessNumber, 
 import {isLegal, bullsCows} from '../utils'
 import { SpinnerGroup } from './SpinnerGroup';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import {styles} from './styles'
 
 class GameView extends React.Component{
   constructor(props){
@@ -53,8 +53,10 @@ class GameView extends React.Component{
       move=<View style={styles.container}>
       <Text style={styles.textMiddle}>Ваш ход</Text>
         <SpinnerGroup count={4} max={9} init={this.props.playerPrevNumber} onChange={(value)=>{this.setState({playerNumber:value})}}/>
+        <Text></Text>
         <Button title="Проверить" onPress={this.check.bind(this)}/> 
         {correct}
+        <Text></Text>
         </View>
       break;
     case 1:
@@ -88,6 +90,7 @@ class GameView extends React.Component{
                 </View>
   if(this.props.compWins) move=<View style={{justifyContent:"center",alignItems:"center"}}>
   <Text style={styles.textLarge}>УРРРРАААА!. Я победил :)</Text>
+  <Text style={styles.textSmall}>А мое число было {this.props.compNumber}</Text>
 </View>
 if(this.props.playerWins) move=<View style={{justifyContent:"center",alignItems:"center"}}>
 <Text style={styles.textLarge}>Вы угадали! :)</Text>
@@ -125,36 +128,7 @@ const GameScreen = (props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  yourStep:{fontSize:20},
-  texSmall:{fontSize:15},
-  textMiddle:{fontSize:20},
-  textLarge:{fontSize:25},
-    image:{width:100,height:100,resizeMode:"contain"},
-    container:{
-      flexDirection: 'column',
-      justifyContent: 'flex-start',
-      alignItems:'center',
-    width:"100%"},
-    maincontainer:{flex: 1},
-    title:{fontSize:30},
-    movesTable:{
-      borderWidth:1,
-      flexDirection:"row",
-      justifyContent:"space-around",
-    },
-    moves:{
-      flexDirection:"column",
-      justifyContent:"center",
-      alignItems:"center",
-      borderColor:"blue",
-      borderWidth:1
-    },
-    incorrect:{
-      color:"red"
-    }
 
-});
 
 const mapStatetoProps=(store)=>{
   return {

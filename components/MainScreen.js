@@ -8,11 +8,11 @@ import {
   Text,
   Image
 } from 'react-native';
-
+import {styles} from './styles'
 const MainScreen = (props) => {
   return (
-            <View style={styles.container}>
-                <Text style={styles.title}>Быки и Коровы</Text>
+            <View style={styles.mainScreenContainer}>
+                <Text style={styles.mainScreenTitle}>Быки и Коровы</Text>
                 <Image source={require('../images/bull.jpg')} style={styles.image}/>
                 <Button title="Новая игра" onPress={()=>{props.reset();props.navigation.navigate("Game")}}/>
                 {props.continueGame?<Button title="Продолжить игру" onPress={()=>{props.navigation.navigate("Game")}}/>:<></>}
@@ -21,15 +21,6 @@ const MainScreen = (props) => {
   );
 };
 
-const styles = StyleSheet.create({
-    image:{width:100,height:100,resizeMode:"contain"},
-    container:{height:300,flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'flex-start',
-      alignItems:'center',width:"100%"},
-    maincontainer:{flex: 1},
-    title:{fontSize:30}
-});
 
 const mapStateToProps=(store)=>{
   return {
