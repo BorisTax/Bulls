@@ -28,7 +28,8 @@ export const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems:'center',
-      width:"100%"},
+      width:"100%",
+    height:"100%"},
       moveContainer:{
         flexDirection: 'column',
         justifyContent: 'flex-start',
@@ -52,18 +53,28 @@ export const styles = StyleSheet.create({
         color:"red"
       },
       spinButton:{
-        height:20,
-        resizeMode:"contain",
+        height:30,
+        width:30,
+        resizeMode:"cover",
+    },
+    spinText:{
+      textAlign:"center",
+      fontFamily:"monospace",
+      fontSize:30,
+      borderWidth:1,
+      borderColor:'grey'
+    },
+    imageFit:{
+      flex:1,
+      width:undefined,
+      height:undefined
     },
     buttons:{
-      justifyContent:"center",
-      alignItems:"center",
       borderRadius:15,
       backgroundColor:"#00FFFF",
       borderColor:"blue",
       borderWidth:3,
       padding:5,
-      
     },
     newGameButton:{
       backgroundColor:"#55FF55",
@@ -76,5 +87,8 @@ export const styles = StyleSheet.create({
     helpButton:{
       backgroundColor:"#0088FF",
       color:"white"
+    },
+    textCenter:{
+      textAlign:"center"
     }
   });

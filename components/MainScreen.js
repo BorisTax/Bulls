@@ -2,8 +2,6 @@ import React from 'react';
 import {connect} from  'react-redux'
 import {reset} from '../actions'
 import {
-  Button,
-  StyleSheet,
   View,
   Text,
   Image

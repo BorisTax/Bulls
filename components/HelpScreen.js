@@ -24,7 +24,7 @@ const HelpScreen = () => {
   return (
             <View style={styles.helpScreenContainer}>
                 <Text style={styles.helpScreenText}>Игра "Быки и Коровы"</Text>
-                <Text style={styles.helpScreenText}>Версия 0.1</Text>
+                <Text style={styles.helpScreenText}>Версия 0.2</Text>
                 <Text style={styles.helpScreenText}>Автор Тахмазов Борис</Text>
                 {rules?<Text style={styles.textSmall}>Игроки загадывают четырехзначное число с различными цифрами и по очереди угадывают число соперника. 
                           Игрок называет любое четырехзначное число, соперник дает ответ в виде n-быков, m-коров.

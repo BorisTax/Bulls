@@ -6,10 +6,12 @@ import {createStore} from 'redux'
 import {mainReducer} from './reducers'
 import {Provider} from 'react-redux';
 import {createAppContainer, createStackNavigator} from 'react-navigation'
+import ShowErrorScreen from './components/ShowErrorScreen';
 const Stack=createStackNavigator({
       Main: {screen: MainScreen},
       Game: {screen: GameScreen},
-      Help: {screen: HelpScreen}
+      Help: {screen: HelpScreen},
+      Mistakes:{screen: ShowErrorScreen}
     },
     {
       initialRootName:"Main"
